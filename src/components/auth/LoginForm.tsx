@@ -13,6 +13,18 @@ const LoginForm = () => {
   const {
     toast
   } = useToast();
+  const isDevAccessEnabled = import.meta.env.DEV;
+
+  const handleDevAccess = async () => {
+    try {
+      setIsLoading(true);
+      localStorage.setItem('authToken', 'dev-access-token');
+      toast({ title: "Acceso de desarrollo", description: "Sesión iniciada en modo desarrollo", variant: "success" });
+      navigate('/');
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username || !password) {
@@ -79,6 +91,11 @@ const LoginForm = () => {
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </Button>
+      {isDevAccessEnabled && (
+        <Button type="button" variant="secondary" className="w-full" onClick={handleDevAccess} disabled={isLoading}>
+          Acceso de desarrollo
+        </Button>
+      )}
       
       <div className="text-center text-sm text-muted-foreground">
         
